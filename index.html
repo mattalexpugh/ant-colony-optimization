@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ant Colony Optimisation</title>
+    <!-- App CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="assets/css/aco.css" rel="stylesheet">
+
+    <!-- Lib JS -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/underscore.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
+    <script src="assets/js/sigma.js"></script>
+
+    <!-- App JS -->
+    <script src="core/json/graph1.js"></script>
+    <script src="core/js/structures/minimumSpanningTree.js"></script>
+    <script src="core/js/structures/undirectedGraph.js"></script>
+    <script src="core/js/structures/constructedGraph.js"></script>
+    <script src="core/js/algorithms/antColonyOptimiser.js"></script>
+    <script src="core/js/algorithms/cycleFinder.js"></script>
+    <script src="core/js/app/run.js"></script>
+</head>
+<body style>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">1-ANT Ant Colony Optimisation</a>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="padding-top: 60px;">
+      <div class="page-header">
+        <h1 style="margin-bottom: 25px;">Assign Experiment Values<br /><small>&alpha; &amp; &beta; are for ACO, &rho; affects pheromone values, &sigma; is the number of iterations with these parameters.</small></h1>
+        <button id="run-experiment" class="btn btn-primary pull-right" />Run Experiment</button>
+        <p>
+          &alpha; = <input type="text" value="1" id="param-alpha" style="width:100px" /> 
+          &beta; = <input type="text" value="0" id="param-beta" style="width:100px" />
+          &rho; = <input type="text" value="1" id="param-rho" style="width:100px" />
+          &sigma; = <input type="text" value="5" id="param-sigma" style="width:100px" />
+        </p>
+        <p>
+        </p>
+      </div>
+      <div class="tabbable">
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#graph" data-toggle="tab">Graph</a>
+          </li>
+          <li>
+            <a href="#mst" data-toggle="tab">MST Edges</a>
+          </li>
+          <li>
+            <a href="#graph-data" data-toggle="tab">Input Graph Data</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="graph" style="height:auto;">
+              <h3>Graph Visualisation</h3>
+              <!-- Graphs here -->
+              <div class="graph-container">
+                <h4>Input Graph <small id="details-input"></small></h4>
+                <div id="graph-canvas-input" style="width:98%; height:98%; border:1px solid #CCC; margin-bottom: 20px;"></div>
+              </div>
+              <div class="graph-container">
+                <h4>MST Target (Computed) <small id="details-mst"></small></h4>
+                <div id="graph-canvas-mst" style="width:98%; height:98%; border:1px solid #CCC; margin-bottom: 20px;"></div>
+              </div>
+              <div class="graph-container">
+                <h4>ACO Result <small id="details-aco"></small></h4>
+                <div id="graph-canvas-output" style="width:98%; height:98%; border:1px solid #CCC; margin-bottom: 20px;"></div>
+              </div>
+              <div class="clear-all" style="margin-bottom: 45px;"></div>
+              <h4>Constructed Graph</h4>
+              <div id="graph-canvas-constructed" style="width:99%; height:400px; border:1px solid #CCC; margin-bottom: 20px;"></div>
+          </div>
+          <div class="tab-pane" id="mst">
+              <h3>Randomised Minimum Spanning Tree (Kruskal)</h3>
+              <div id="mst-data"></div>
+          </div>
+          <div class="tab-pane" id="graph-data">
+            <h3>Input Graph JSON</h3>
+            <div class="alert alert-info" style="width: 95%;">
+              <button id="btn-update-graph" class="btn btn-primary pull-right" />Reload</button>
+              <p>
+                Changing this JSON structure and clicking the <strong>Reload</strong> button will regenerate the input and constructed graphs, including the target MST.
+              </p>
+              <p>
+                The experiment may then be re-run with the defined parameters. <a href="#">Click here for an explanation of the format required.</a>
+              </p>
+            </div>
+            <textarea rows="20" style="width:95%;" id="graph-data-source"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Developed by Matthew Pugh as part of SE36010.</p>
+      </div>
+    </footer>
+</body>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        // Control clicking the button too often
+        $('#run-experiment').click(function() {
+          if (ACO_RUNNING) {
+            alert('ACO still running, please wait until finished and run again.');
+          } else {
+            runACO();
+          }
+        });
+    });
+</script>
+</html>
